@@ -1,6 +1,9 @@
 package com.tapapp3;
 
 import com.facebook.react.ReactActivity;
+import org.devio.rn.splashscreen.SplashScreen;
+
+import android.os.Bundle;
 
 public class MainActivity extends ReactActivity {
 
@@ -9,7 +12,14 @@ public class MainActivity extends ReactActivity {
    * rendering of the component.
    */
   @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      SplashScreen.show(this);
+      super.onCreate(savedInstanceState);
+  }
+
+  @Override
   protected String getMainComponentName() {
     return "tapApp3";
   }
+
 }

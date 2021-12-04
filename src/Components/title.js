@@ -1,10 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View,Image } from 'react-native'
 
 const Title = () => {
     return (
         <View style={styles.header}>
-        <Text style={styles.text}> TAPGAME</Text>
+        <Image
+        style={styles.logo}
+        source={require('../../assets/images/logo1.png')}
+        />
       </View>
     )
 }
@@ -14,11 +17,8 @@ export default Title
 const styles = StyleSheet.create({
     header:{
       height:50,
-      margin:10
     },
-    text:{
-      color:'blue',
-      fontSize:15,
-      fontWeight:'bold',
-      fontStyle:'italic',
+    logo:{
+     height:30,
+     width:120
     }})

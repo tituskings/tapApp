@@ -1,14 +1,29 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Text, View,StyleSheet } from 'react-native';
-import Game from './screens/Game';
-import Home from './screens/Home';
-import Splash from './screens/Splash';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import Game from './src/screens/Game';
+import Result from './src/screens/Result';
+import SplashScreen from 'react-native-splash-screen';
+
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide()
+  }, [])
   return (
-    <View style={styles.container}>
-      <Game/>
-    </View>
+    <PaperProvider>
+    <NavigationContainer>
+      <Stack.Navigator>
+          <Stack.Screen name="Result" component={Result}  options={{ headerShown:false}}/>
+          <Stack.Screen name="Game" component={Game}  options={{ headerShown:false}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+    </PaperProvider>
   );
 }
 

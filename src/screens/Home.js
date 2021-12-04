@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import Button from '../Components/button'
+import { Button } from 'react-native-paper';
 import Title from '../Components/title'
 
 const Home = () => {
@@ -8,9 +8,14 @@ const Home = () => {
         <View style={styles.container}>
             <Title/>
             <View style={styles.btnContainer}>
-            <Button buttonText='New Game' btnstyle={styles.view}/>
-            <Button buttonText='Continue'btnstyle={styles.view}/>
-            <Button buttonText='Quit' btnstyle={styles.view}/>
+            <Button style={styles.view} mode="text" onPress={() => console.log('Pressed')}>
+                New Game
+            </Button>
+            <Button style={styles.view} mode="text" onPress={() => console.log('Pressed')}>
+                Continue
+            </Button><Button style={styles.view} mode="text" onPress={() => console.log('Pressed')}>
+                Quit
+            </Button>
             </View>
         </View>
     )
