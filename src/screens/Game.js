@@ -33,11 +33,9 @@ const Game = ({navigation,route}) => {
        Animated.timing(leftValue,{
            toValue:350,
            duration:5000,
-           useNativeDriver:false
+           useNativeDriver:true
         }).start(()=>{
-            Alert.alert('flash','Time Up', [
-                {text:''}
-            ]);
+            
             setTimeout(()=>{
                 navigation.navigate({
                     name:'Result',
@@ -56,6 +54,7 @@ const Game = ({navigation,route}) => {
 
     
     const count =() =>{
+        //if start button is clicked
         if(isActive){
             setCounter(counter + 1); console.log(counter)
             if(counter == number){
@@ -66,7 +65,8 @@ const Game = ({navigation,route}) => {
                 if(pass.current < 10 )pass.current = pass.current + 1
                 console.log(pass.current)
             }
-            if(pass.current === 10 ){
+            //if current pass is up to the required difficulty
+            if(pass.current == 10 ){
                 Alert.alert('flash','You tried but next time do well and have fun', [
                     {text:'ok' , onPress: ()=> navigation.navigate({
                         name:'Result',
@@ -92,7 +92,7 @@ const Game = ({navigation,route}) => {
             <Title/>
             <View style={styles.top}>
             {isActive? 
-            <Text style={styles.text}>{pass.current} {pass.current == 1 ?"tap" : "taps"}</Text>
+            <Text style={styles.text}>{pass.current} {pass.current <= 1 ?"tap" : "taps"}</Text>
             :<Text></Text> }
             </View>
             <Animated.View 
