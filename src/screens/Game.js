@@ -1,7 +1,7 @@
 import { react } from '@babel/types';
 import React,{ useState, useEffect,useRef} from 'react'
-import { Alert, Animated, StyleSheet, Text, View,ImageBackground } from 'react-native'
-import { Button } from 'react-native-paper';
+import { Alert, Animated, StyleSheet, Text, View,ImageBackground,TouchableOpacity } from 'react-native'
+import { Button, Modal, Portal,Provider } from 'react-native-paper';
 import Tapbutton from '../Components/tapbutton';
 import Title from '../Components/title'
 
@@ -20,32 +20,45 @@ const Game = ({navigation,route}) => {
     const [isActive, setIsActive] = useState(false);
     const leftValue =  useState(new Animated.Value(0)) [0];
     const pass = useRef (0);
+    const [Visible, setVisible] = useState(false);
     
-   
+   //function that toogles the start button
    const toggle = ()=>{
        setIsActive(!isActive)
       
    }
-   
-   
+
+   //function that shows the modal
+    const showModal = () => {
+        setVisible(true)
+    }
+    // control the visibility of the modal
+    const modFunction = () => {
+        showModal();
+        setTimeout(()=>{
+            //sets visibility to false and navigate to next screen
+            setVisible(false)
+            navigation.navigate({
+                name:'Result',
+                //passing pass.current as a param to the next screen
+                params:{passd:pass.current},
+                merge: true,
+            })
+
+        },2000)
+    }
+
    useEffect( () => {
        if(isActive){
        Animated.timing(leftValue,{
            toValue:350,
            duration:5000,
-           useNativeDriver:true
+           useNativeDriver:false
         }).start(()=>{
-            
-            setTimeout(()=>{
-                navigation.navigate({
-                    name:'Result',
-                    params:{passd:pass.current},
-                    merge: true,
-                })
-
-            },2000)
-            
-        })
+            // it can work only when the player has not reached the required target but time is up
+            if(pass.current < 10)
+                 modFunction()
+            })
 
     }
 
@@ -54,26 +67,23 @@ const Game = ({navigation,route}) => {
 
     
     const count =() =>{
-        //if start button is clicked
+        //if start button is clicked then the condition becomes true
         if(isActive){
             setCounter(counter + 1); console.log(counter)
+            //conditio is true when the number of taps is equal to the generated random number
             if(counter == number){
                 let min = 1;
                 let max = 3;
                 setNumber(Math.floor(Math.random()*max)+min);
+                //setting the counter or number of taps back to the initial value when the above condition is true
                 setCounter(1)
+                //this condition makes sure that pass.current doesnt exceed 10
                 if(pass.current < 10 )pass.current = pass.current + 1
                 console.log(pass.current)
             }
             //if current pass is up to the required difficulty
             if(pass.current == 10 ){
-                Alert.alert('flash','You tried but next time do well and have fun', [
-                    {text:'ok' , onPress: ()=> navigation.navigate({
-                        name:'Result',
-                        params:{passd:pass.current},
-                        merge: true,
-                    })}
-                ]);
+              modFunction()
             }
         }
     }
@@ -90,6 +100,12 @@ const Game = ({navigation,route}) => {
 
         <View style={styles.container}>
             <Title/>
+                <Portal>
+                    <Modal visible={Visible} onDismiss={modFunction} contentContainerStyle={styles.containerStyle}>
+                        {pass.current == 10 ? <Text >Good Job!</Text> :<Text >Time UP!</Text>}
+                    </Modal>
+                </Portal>
+            
             <View style={styles.top}>
             {isActive? 
             <Text style={styles.text}>{pass.current} {pass.current <= 1 ?"tap" : "taps"}</Text>
@@ -109,10 +125,9 @@ const Game = ({navigation,route}) => {
             <Text style={styles.num}>{isActive ? number : ''}</Text>
             <Tapbutton style={styles.button} onPress={count}/>
             {isActive? <Text>''</Text> : 
-            <Button style={styles.btnStart} color='white'
-            labelStyle={styles.btntext} mode="outlined" onPress={toggle } disabled={isActive}>
-                 Start
-            </Button>
+            <TouchableOpacity style={styles.btnStart} onPress={toggle } disabled={isActive}>
+                 <Text style={styles.btntext}>Start</Text>
+            </TouchableOpacity>
                 }
             </View>
         </View>
@@ -153,7 +168,8 @@ const styles = StyleSheet.create({
         paddingVertical:10, 
         marginTop:50,
         borderColor:'purple',
-        borderRadius:120
+        borderRadius:120,
+        color:'white'
         
     },
 
@@ -169,5 +185,11 @@ const styles = StyleSheet.create({
     text:{
         fontSize:17,
         fontWeight:'bold'
+    },
+    containerStyle:{
+        backgroundColor:'white',
+        padding:30,
+        marginHorizontal:30,
+        borderRadius:10
     }
 })

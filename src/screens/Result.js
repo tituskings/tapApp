@@ -16,6 +16,7 @@ const Result = ({route, navigation}) => {
     const [lifeNow , setNow] = useState(10)
     const [status,setStatus] = useState(true)
     const [currentTime, setCurrentTime] = useState(0)
+    const [stepNow, setStepNow] = useState(0);
     const [difficultynum, setDefficultynum] = useState(10)
 
    
@@ -48,6 +49,7 @@ const Result = ({route, navigation}) => {
    // step function
    const nstep = () => {
     step.current = step.current + 1
+    setStepNow(step.current)
     setStatus(false)
    }
 
@@ -116,11 +118,13 @@ const Result = ({route, navigation}) => {
                     <Text style={styles.text}>Level {level}</Text>
 
                     <View style={{flex:1,flexDirection:'row',marginLeft:20,alignItems:'center'}}>
-                        <Progess step={step.current/10} Rstep={step.current}/>
+                        <Progess step={stepNow/10} Rstep={stepNow}/>
                     </View>
                    <View style={{flexDirection:'row',alignItems:'center', width:100}}>
                         <LifeStatus life={lifeNow}/>
-                        <Text>{currentTime}</Text>
+                   </View>
+                   <View style={{flexDirection:'row',alignItems:'center'}}>
+                        {status ? <Text style={{color:'white',fontSize:14}}>{currentTime}</Text> : <Text></Text>}
                    </View>
                  </View>
 
