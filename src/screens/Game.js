@@ -20,7 +20,10 @@ const Game = ({navigation,route}) => {
     const [isActive, setIsActive] = useState(false);
     const leftValue =  useState(new Animated.Value(0)) [0];
     const pass = useRef (0);
+    const nTime = useRef(6)
+    const [currentGameT, setCurrentGameT] = useState(0)
     const [Visible, setVisible] = useState(false);
+    const [diffTime, setDiffTime] = useState(0)
     
    //function that toogles the start button
    const toggle = ()=>{
@@ -47,19 +50,26 @@ const Game = ({navigation,route}) => {
 
         },2000)
     }
-
-   useEffect( () => {
-       if(isActive){
-       Animated.timing(leftValue,{
-           toValue:350,
-           duration:5000,
-           useNativeDriver:false
-        }).start(()=>{
-            // it can work only when the player has not reached the required target but time is up
-            if(pass.current < 10)
-                 modFunction()
-            })
-
+    
+    const nTimer = () => {
+        setTimeout(() => {
+            //subtract from timer
+            nTime.current= nTime.current - 1;
+            //set current time display
+            setCurrentGameT(nTime.current)
+            //display time
+            console.log(nTime)
+            if(nTime.current > 0 ) nTimer()
+            if(nTime.current == 0)
+            modFunction()
+        }, 1000);
+    }
+    
+    useEffect( () => {
+        if(isActive){
+           nTime.current = route.params?.difficultyTimeS
+           
+       nTimer()
     }
 
     },[isActive])
@@ -88,7 +98,7 @@ const Game = ({navigation,route}) => {
         }
     }
 
-
+    const formatNumber= number => `0${number}`.slice(-2);
 
    return (
        <>
@@ -102,7 +112,7 @@ const Game = ({navigation,route}) => {
             <Title/>
                 <Portal>
                     <Modal visible={Visible} onDismiss={modFunction} contentContainerStyle={styles.containerStyle}>
-                        {pass.current == 10 ? <Text >Good Job!</Text> :<Text >Time UP!</Text>}
+                        {pass.current == 10 ? <Text style={styles.timerTextStyle2} >Good Job!</Text> :<Text style={styles.timerTextStyle2} >Time UP!</Text>}
                     </Modal>
                 </Portal>
             
@@ -111,16 +121,10 @@ const Game = ({navigation,route}) => {
             <Text style={styles.text}>{pass.current} {pass.current <= 1 ?"tap" : "taps"}</Text>
             :<Text></Text> }
             </View>
-            <Animated.View 
-            style={[
-                {
-                    width:20,
-                    height:20,
-                    marginLeft:leftValue,
-                    backgroundColor:'#353f4f'
-                }
-            ]}
-            />
+            <View style={styles.timerStyle}>
+            <Text style={styles.timerTextStyle1}>Timer</Text>
+            <Text style={styles.timerTextStyle}>{formatNumber(currentGameT)}</Text>
+            </View>
             <View style={styles.gamecenter}>
             <Text style={styles.num}>{isActive ? number : ''}</Text>
             <Tapbutton style={styles.button} onPress={count}/>
@@ -183,13 +187,32 @@ const styles = StyleSheet.create({
 
     },
     text:{
-        fontSize:17,
-        fontWeight:'bold'
+        fontSize:20,
+        fontWeight:'bold',
+        marginLeft:180
     },
     containerStyle:{
         backgroundColor:'white',
         padding:30,
-        marginHorizontal:30,
+        marginHorizontal:20,
         borderRadius:10
-    }
+    },
+    timerStyle:{
+        marginLeft:30
+
+    },
+    timerTextStyle1:{
+        fontSize:24,
+        fontWeight:'bold',
+        marginHorizontal:10
+    },
+    timerTextStyle2:{
+        fontSize:24,
+        fontWeight:'bold',
+    },
+    timerTextStyle:{
+        fontSize:24,
+        fontWeight:'bold',
+        marginHorizontal:15
+    },
 })
