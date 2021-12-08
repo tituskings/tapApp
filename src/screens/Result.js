@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useRef} from 'react'
-import { StyleSheet, Text, View, StatusBar} from 'react-native'
+import { StyleSheet, Text, View, StatusBar, TouchableOpacity} from 'react-native'
 import {  Modal, Portal } from 'react-native-paper';
 import ResultBox from '../Components/resultBtn';
 import BackgroundVid from '../Components/backgroundVid';
@@ -20,6 +20,7 @@ const Result = ({route, navigation}) => {
     const [currentTime, setCurrentTime] = useState(0)
     const [stepNow, setStepNow] = useState(0);
     const [Visible, setVisible] = useState(false);
+    const [mod2, setMod2] = useState(false);
 
    
    useEffect(()=>{
@@ -41,13 +42,18 @@ const Result = ({route, navigation}) => {
    })
 
     //function that shows the modal
-    const showModal = () => {
+    const showModal1 = () => {
         setVisible(true)
+    }
+    const showModal2 = () => {
+        setMod2(true)
     }
     //function that hide the modal
     const hideModal = () => {
         setVisible(false)
+        setMod2(false)
     }
+    
 
 
    // level function
@@ -147,7 +153,7 @@ const Result = ({route, navigation}) => {
             }else{
                 console.log("bobbysua")
             }
-            //Nexy level
+            //Next level
             if(step.current  == 10){
                 if( level == 2){
                     selections()
@@ -174,7 +180,17 @@ const Result = ({route, navigation}) => {
         <StatusBar backgroundColor='#2b6d94'/>
                 <Portal>
                     <Modal visible={Visible} onDismiss={hideModal} contentContainerStyle={styles.containerStyle}>
-                     <Text > INSTRUCTIONS</Text>
+                     <Text style={{marginVertical:5,fontWeight:'bold',fontSize:16}} > INSTRUCTIONS</Text>
+                     <Text style={{marginVertical:3, fontSize:16}}>step 1 "Select" the difficulty and choose 'easy','medium','hard'</Text>
+                     <Text style={{marginVertical:3, fontSize:16}}>step 2 "Select" play button to move to the Game arena then click the Start button to begin the gaming</Text>
+                     <Text style={{marginVertical:3, fontSize:16}}>step 3 "Select" Start button to begin the gaming</Text>
+                    </Modal>
+                </Portal>
+                <Portal>
+                    <Modal visible={mod2} onDismiss={hideModal} contentContainerStyle={styles.containerStyle2}>
+                     <TouchableOpacity style={styles.modOpa}><Text style={styles.opaText}>Easy</Text></TouchableOpacity>
+                     <TouchableOpacity style={styles.modOpa}><Text style={styles.opaTextM}>Medium</Text></TouchableOpacity>
+                     <TouchableOpacity style={styles.modOpa}><Text style={styles.opaText}>Hard</Text></TouchableOpacity>
                     </Modal>
                 </Portal>
                  <View style={styles.top}>
@@ -215,7 +231,9 @@ const Result = ({route, navigation}) => {
                                         onPress={selections}
                     />
               
-                    <ResultBox  text='Instruction' onPress={showModal}/>
+                    <ResultBox  text='Difficulty' onPress={showModal2}/>
+
+                    <ResultBox  text='Instruction' onPress={showModal1}/>
                        
                     
                     <ResultBox  text='Quit'/>
@@ -257,11 +275,33 @@ const styles = StyleSheet.create({
         marginHorizontal:15,
         borderRadius:10
     },
+    containerStyle2:{
+        backgroundColor:'white',
+        paddingHorizontal:5,
+        paddingVertical:20,
+        marginHorizontal:60,
+        borderRadius:10
+    },
     tapStyle:{
         fontFamily: 'menlo', 
         fontSize: 20, 
         fontWeight:'900',
         marginBottom:8, 
         color:'white'
-    }
+    },
+    modOpa:{
+        borderBottomWidth:0.3,
+        borderBottomColor:"black",
+        height:40
+    },
+    opaText:{
+        marginLeft:120,
+        fontSize:18,
+        fontWeight:'bold'
+    },
+    opaTextM:{
+        marginLeft: 105,
+        fontSize:18,
+        fontWeight:'bold'
+    },
 })
