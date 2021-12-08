@@ -1,6 +1,6 @@
 import React,{useState,useEffect,useRef} from 'react'
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity} from 'react-native'
-import {  Modal, Portal } from 'react-native-paper';
+import {  Checkbox, Modal, Portal, RadioButton } from 'react-native-paper';
 import ResultBox from '../Components/resultBtn';
 import BackgroundVid from '../Components/backgroundVid';
 import Progess from '../Components/progess';
@@ -21,16 +21,18 @@ const Result = ({route, navigation}) => {
     const [stepNow, setStepNow] = useState(0);
     const [Visible, setVisible] = useState(false);
     const [mod2, setMod2] = useState(false);
+    const [checked,setChecked] = useState('easy');
 
    
    useEffect(()=>{
+       route.params?.passd
        //if pass a param from the game screen is equal to 10 then increase step by 1
-       if(status && route.params?.passd == 10){
+       if( route.params?.passd == 10){
            nstep()
        } 
        
        // if step equals 10 then increase the level by 1
-       if(status && step.current == 10){
+       if(status && step.current == 10){ 
          nlevel()
        }
        //if game is loaded and life is less than 10
@@ -66,7 +68,6 @@ const Result = ({route, navigation}) => {
    const nstep = () => {
     step.current = step.current + 1
     setStepNow(step.current)
-    setStatus(false)
    }
 
    
@@ -134,6 +135,10 @@ const Result = ({route, navigation}) => {
     }
 }
 
+
+
+
+
     const contNextFunc = () => {
         //COntinue, another step
         if(route.params?.passd == 10){
@@ -188,9 +193,21 @@ const Result = ({route, navigation}) => {
                 </Portal>
                 <Portal>
                     <Modal visible={mod2} onDismiss={hideModal} contentContainerStyle={styles.containerStyle2}>
-                     <TouchableOpacity style={styles.modOpa}><Text style={styles.opaText}>Easy</Text></TouchableOpacity>
-                     <TouchableOpacity style={styles.modOpa}><Text style={styles.opaTextM}>Medium</Text></TouchableOpacity>
-                     <TouchableOpacity style={styles.modOpa}><Text style={styles.opaText}>Hard</Text></TouchableOpacity>
+                     <View style={styles.modOpa}><Text style={styles.opaText}>Easy</Text>
+                                <RadioButton value='easy' 
+                                status={checked === 'easy' ? 'checked' : 'unchecked'} 
+                                onPress={() => setChecked('easy')} />
+                    </View>
+                     <View style={styles.modOpa}><Text style={styles.opaText}>Medium</Text>
+                                <RadioButton value='medium'
+                                 status={checked === 'medium'? 'checked' : 'unchecked'}
+                                  onPress={() => setChecked('medium')}/>
+                    </View>
+                     <View style={styles.modOpa}><Text style={styles.opaText}>Hard</Text>
+                                <RadioButton value='hard' 
+                                status={checked === 'hard' ? 'checked' : 'unchecked'} 
+                                onPress={() => setChecked('hard')} />
+                    </View>
                     </Modal>
                 </Portal>
                  <View style={styles.top}>
@@ -290,18 +307,16 @@ const styles = StyleSheet.create({
         color:'white'
     },
     modOpa:{
+        alignContent:'center',
+        justifyContent:'space-between',
+        flexDirection:'row',
         borderBottomWidth:0.3,
         borderBottomColor:"black",
         height:40
     },
     opaText:{
-        marginLeft:120,
         fontSize:18,
         fontWeight:'bold'
     },
-    opaTextM:{
-        marginLeft: 105,
-        fontSize:18,
-        fontWeight:'bold'
-    },
+    
 })

@@ -18,12 +18,10 @@ const Game = ({navigation,route}) => {
     const [counter, setCounter] = useState(1);
     const [number, setNumber]=useState(2);
     const [isActive, setIsActive] = useState(false);
-    const leftValue =  useState(new Animated.Value(0)) [0];
     const pass = useRef (0);
     const nTime = useRef(6)
     const [currentGameT, setCurrentGameT] = useState(0)
     const [Visible, setVisible] = useState(false);
-    const [diffTime, setDiffTime] = useState(0)
     
    //function that toogles the start button
    const toggle = ()=>{
@@ -60,7 +58,7 @@ const Game = ({navigation,route}) => {
             //display time
             console.log(nTime)
             if(nTime.current > 0 ) nTimer()
-            if(nTime.current == 0)
+            if(nTime.current == 0 && pass.current < 10 )
             modFunction()
         }, 1000);
     }
@@ -103,7 +101,7 @@ const Game = ({navigation,route}) => {
    return (
        <>
        <ImageBackground
-       source= {require('../../assets/images/backg1.png')}
+       source= {require('../../assets/images/back2.png')}
        resizeMode='cover'
        style={{flex:1}}
        >
@@ -117,13 +115,13 @@ const Game = ({navigation,route}) => {
                 </Portal>
             
             <View style={styles.top}>
+            <View >
+            <Text style={styles.timerTextStyle1}>Timer</Text>
+            <Text style={styles.timerTextStyle}>{formatNumber(currentGameT)}</Text>
+            </View>
             {isActive? 
             <Text style={styles.text}>{pass.current} {pass.current <= 1 ?"tap" : "taps"}</Text>
             :<Text></Text> }
-            </View>
-            <View style={styles.timerStyle}>
-            <Text style={styles.timerTextStyle1}>Timer</Text>
-            <Text style={styles.timerTextStyle}>{formatNumber(currentGameT)}</Text>
             </View>
             <View style={styles.gamecenter}>
             <Text style={styles.num}>{isActive ? number : ''}</Text>
@@ -145,7 +143,7 @@ export default Game
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        padding:20,
+        padding:10,
     },
     gamecenter:{
         flex:1,
@@ -197,21 +195,17 @@ const styles = StyleSheet.create({
         marginHorizontal:20,
         borderRadius:10
     },
-    timerStyle:{
-        marginLeft:30
-
-    },
     timerTextStyle1:{
-        fontSize:24,
+        fontSize:16,
         fontWeight:'bold',
         marginHorizontal:10
     },
     timerTextStyle2:{
-        fontSize:24,
+        fontSize:22,
         fontWeight:'bold',
     },
     timerTextStyle:{
-        fontSize:24,
+        fontSize:16,
         fontWeight:'bold',
         marginHorizontal:15
     },
