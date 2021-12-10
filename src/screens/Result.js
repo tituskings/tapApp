@@ -14,6 +14,7 @@ const Result = ({route, navigation}) => {
     const life = useRef(10)
     const step = useRef(0);
     var difficultyTime = useRef(10);
+    var difficultyTask = useRef(10);
     const nTime = useRef(250)
     const [lifeNow , setNow] = useState(10)
     const [status,setStatus] = useState(true)
@@ -114,6 +115,22 @@ const Result = ({route, navigation}) => {
        //else pop error asking user to wait for life to be added 
         //navigation.navigate('Game') 
         //life.current = life.current - 1
+    
+    switch (checked) {
+        case 'easy':
+            difficultyTask.current
+            break;
+        case 'medium':
+            difficultyTask.current=difficultyTask.current + 3
+            break;
+        case 'hard':
+            difficultyTask.current = difficultyTask.current + 6
+            break;
+    
+        default:
+            difficultyTask.current
+            break;
+    }
         
     if(life.current > 0){
         

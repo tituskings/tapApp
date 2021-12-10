@@ -15,35 +15,39 @@ const getRemaining = (time) => {
 }
 */
 const Game = ({navigation,route}) => {
-    const [counter, setCounter] = useState(1);
+    var [counter, setCounter] = useState(1);
     const [number, setNumber]=useState(2);
     const [isActive, setIsActive] = useState(false);
     const pass = useRef (0);
     const nTime = useRef(6)
     const [currentGameT, setCurrentGameT] = useState(0)
+    const [passGameT, setPassGameT] = useState(0)
     const [Visible, setVisible] = useState(false);
+    const [ndifficultyTask, setNdifficultyTask] = useState(0)
     
    //function that toogles the start button
    const toggle = ()=>{
        setIsActive(!isActive)
       
+      
    }
-
+  
    //function that shows the modal
     const showModal = () => {
         setVisible(true)
     }
-    // control the visibility of the modal
+   
+    
     const modFunction = () => {
-        showModal();
+        // control the visibility of the modal
         setTimeout(()=>{
             //sets visibility to false and navigate to next screen
             setVisible(false)
             navigation.navigate({
                 name:'Result',
                 //passing pass.current as a param to the next screen
-                params:{passd:pass.current},
-                merge: true,
+                params:{passd:passGameT},
+                merge: true, 
             })
 
         },2000)
@@ -57,28 +61,36 @@ const Game = ({navigation,route}) => {
             setCurrentGameT(nTime.current)
             //display time
             console.log(nTime)
-            if(nTime.current > 0 ) nTimer()
-            if(nTime.current == 0 && pass.current < 10 )
-            modFunction()
+            if(nTime.current > 0 ) {nTimer()} 
+            if(nTime.current == 0 ) 
+            {modFunction()}
         }, 1000);
     }
     
     useEffect( () => {
+        
         if(isActive){
-           nTime.current = route.params?.difficultyTimeS
-           
+            nTime.current = route.params?.difficultyTimeS
        nTimer()
     }
 
     },[isActive])
 
+    useEffect( () => {
+        
+    return ()=>setIsActive(false)
+
+    },[])
+
 
     
-    const count =() =>{
+    const count = () =>{
         //if start button is clicked then the condition becomes true
         if(isActive){
-            setCounter(counter + 1); console.log(counter)
-            //conditio is true when the number of taps is equal to the generated random number
+            let counterNow = counter + 1
+            setCounter(counterNow); 
+        }
+            //condition is true when the number of taps is equal to the generated random number
             if(counter == number){
                 let min = 1;
                 let max = 3;
@@ -86,17 +98,19 @@ const Game = ({navigation,route}) => {
                 //setting the counter or number of taps back to the initial value when the above condition is true
                 setCounter(1)
                 //this condition makes sure that pass.current doesnt exceed 10
-                if(pass.current < 10 )pass.current = pass.current + 1
-                console.log(pass.current)
+                if(passGameT < 10 ){
+                    newPAssgt = passGameT + 1
+                    setPassGameT(newPAssgt)    
+                }
+                //if current pass is up to the required difficulty
+                if(passGameT == 10){
+                   showModal()
+                }
             }
-            //if current pass is up to the required difficulty
-            if(pass.current == 10 ){
-              modFunction()
-            }
-        }
     }
 
     const formatNumber= number => `0${number}`.slice(-2);
+
 
    return (
        <>
@@ -109,8 +123,8 @@ const Game = ({navigation,route}) => {
         <View style={styles.container}>
             <Title/>
                 <Portal>
-                    <Modal visible={Visible} onDismiss={modFunction} contentContainerStyle={styles.containerStyle}>
-                        {pass.current == 10 ? <Text style={styles.timerTextStyle2} >Good Job!</Text> :<Text style={styles.timerTextStyle2} >Time UP!</Text>}
+                    <Modal visible={Visible} onDismiss={modFunction} contentContainerStyle={styles.containerStyle} dismissable={false}>
+                        {passGameT == 10 ? <Text style={styles.timerTextStyle2} >Good Job!</Text> :<Text style={styles.timerTextStyle2} >Time UP!</Text>}
                     </Modal>
                 </Portal>
             
@@ -120,14 +134,14 @@ const Game = ({navigation,route}) => {
             <Text style={styles.timerTextStyle}>{formatNumber(currentGameT)}</Text>
             </View>
             {isActive? 
-            <Text style={styles.text}>{pass.current} {pass.current <= 1 ?"tap" : "taps"}</Text>
+            <Text style={styles.text}>{passGameT} {passGameT <= 1 ?"tap" : "taps"}</Text>
             :<Text></Text> }
             </View>
             <View style={styles.gamecenter}>
             <Text style={styles.num}>{isActive ? number : ''}</Text>
-            <Tapbutton style={styles.button} onPress={count}/>
+            <Tapbutton style={styles.button} onPress={count} disabled={pass.current == 10 ? true : false}/>
             {isActive? <Text>''</Text> : 
-            <TouchableOpacity style={styles.btnStart} onPress={toggle } disabled={isActive}>
+            <TouchableOpacity style={styles.btnStart} onPress={toggle} disabled={isActive}>
                  <Text style={styles.btntext}>Start</Text>
             </TouchableOpacity>
                 }

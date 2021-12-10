@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-const Tapbutton = ({style,onPress}) => {
+const Tapbutton = ({style,onPress,disabled}) => {
     return (
         <View style={style}>
-            <TouchableOpacity style={styles.mainbutton} onPress={onPress}>
+            <TouchableOpacity style={styles.mainbutton} onPress={onPress} disabled={disabled}>
                 <Text style={styles.text}>
                     TAP
                 </Text>
