@@ -1,41 +1,34 @@
-import React,{useState,useEffect,useRef} from 'react'
+import React,{useState,useEffect,useRef,useContext} from 'react'
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity} from 'react-native'
 import {  Checkbox, Modal, Portal, RadioButton } from 'react-native-paper';
 import ResultBox from '../Components/resultBtn';
 import BackgroundVid from '../Components/backgroundVid';
 import Progess from '../Components/progess';
 import LifeStatus from '../Components/lifeStatus';
+import { GameContext } from '../contextApi';
 
 
 const Result = ({route, navigation}) => {
   
-    const [level, setLevel]= useState(1);
-    const [Trial , setTrail] = useState(0);
     const life = useRef(10)
-    const step = useRef(0);
     var difficultyTime = useRef(10);
     var difficultyTask = useRef(10);
     const nTime = useRef(250)
     const [lifeNow , setNow] = useState(10)
     const [status,setStatus] = useState(true)
     const [currentTime, setCurrentTime] = useState(0)
-    const [stepNow, setStepNow] = useState(0);
     const [Visible, setVisible] = useState(false);
     const [mod2, setMod2] = useState(false);
     const [checked,setChecked] = useState('easy');
+    
+    const [stepNow, setStepNow] = useContext(GameContext)
+    const [level, setLevel] = useContext(GameContext)
+    
 
+   console.log(stepNow)
    
-   useEffect(()=>{
-       route.params?.passd
-       //if pass a param from the game screen is equal to 10 then increase step by 1
-       if( route.params?.passd == 10){
-           nstep()
-       } 
-       
-       // if step equals 10 then increase the level by 1
-       if(status && step.current == 10){ 
-         nlevel()
-       }
+  useEffect(()=>{
+      
        //if game is loaded and life is less than 10
        if(status && life.current < 10){
            
@@ -59,18 +52,7 @@ const Result = ({route, navigation}) => {
     
 
 
-   // level function
-   const nlevel = () =>{
-    setLevel(level + 1)
-    step.current = 0
-    setStatus(false)
-   }
-    // step function
-   const nstep = () => {
-    step.current = step.current + 1
-    setStepNow(step.current)
-   }
-
+ 
    
 
   
@@ -86,7 +68,6 @@ const Result = ({route, navigation}) => {
             //set current time display
             setCurrentTime(nTime.current)
             //display time
-            console.log(nTime)
             //if timer is greater than 0 call timer
             if(nTime.current > 0 ) nTimer()
             //if timer if 0
@@ -176,7 +157,7 @@ const Result = ({route, navigation}) => {
                 console.log("bobbysua")
             }
             //Next level
-            if(step.current  == 10){
+            if(stepNow == 10){
                 if( level == 2){
                     selections()
                 }
@@ -257,7 +238,7 @@ const Result = ({route, navigation}) => {
                     //if the pass if equal to 10 the continue to the next step but still in the same level
                         <ResultBox  text={ 'Continue'} onPress={contNextFunc}/>:
                         //if the step which controls the progress bar is equal to 10 then next load next levl 
-                        step.current  == 10 ? <ResultBox  text={ 'Next Level'} onPress={contNextFunc}/>:
+                        stepNow  == 10 ? <ResultBox  text={ 'Next Level'} onPress={contNextFunc}/>:
                         <Text></Text>
                     }
 

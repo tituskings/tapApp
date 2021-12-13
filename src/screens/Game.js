@@ -1,9 +1,11 @@
-import { react } from '@babel/types';
-import React,{ useState, useEffect,useRef} from 'react'
+import React,{ useState, useEffect,useRef,useContext} from 'react'
 import { Alert, Animated, StyleSheet, Text, View,ImageBackground,TouchableOpacity } from 'react-native'
 import { Button, Modal, Portal,Provider } from 'react-native-paper';
 import Tapbutton from '../Components/tapbutton';
 import Title from '../Components/title'
+import { GameContext } from '../contextApi';
+
+
 
 /*
 const formatNumber= number => `0${number}`.slice(-2);
@@ -24,6 +26,9 @@ const Game = ({navigation,route}) => {
     const [passGameT, setPassGameT] = useState(0)
     const [Visible, setVisible] = useState(false);
     const [ndifficultyTask, setNdifficultyTask] = useState(0)
+
+    const [stepNow, setStepNow] = useContext(GameContext)
+    const [level, setLevel] = useContext(GameContext)
     
    //function that toogles the start button
    const toggle = ()=>{
@@ -39,19 +44,39 @@ const Game = ({navigation,route}) => {
    
     
     const modFunction = () => {
+            //if pass a param from the game screen is equal to 10 then increase step by 1
+            if( pass.current  == 10){
+                nstep()
+            } 
+            
+            // if step equals 10 then increase the level by 1
+            if( stepNow == 10){ 
+            nlevel()
+            }
         // control the visibility of the modal
+        showModal()
         setTimeout(()=>{
             //sets visibility to false and navigate to next screen
             setVisible(false)
             navigation.navigate({
                 name:'Result',
-                //passing pass.current as a param to the next screen
-                params:{passd:passGameT},
+                //passing passGameT as a param to the next screen
+                params:{passd:pass.current},
                 merge: true, 
             })
 
         },2000)
     }
+
+        // level function
+    const nlevel = () =>{
+        setLevel(prevLevel => prevLevel + 1)
+    }
+        // step function
+    const nstep = () => {
+        setStepNow(prevStep => prevStep + 1)
+    }
+
     
     const nTimer = () => {
         setTimeout(() => {
@@ -87,9 +112,8 @@ const Game = ({navigation,route}) => {
     const count = () =>{
         //if start button is clicked then the condition becomes true
         if(isActive){
-            let counterNow = counter + 1
-            setCounter(counterNow); 
-        }
+            setCounter(counter + 1); 
+        
             //condition is true when the number of taps is equal to the generated random number
             if(counter == number){
                 let min = 1;
@@ -99,14 +123,15 @@ const Game = ({navigation,route}) => {
                 setCounter(1)
                 //this condition makes sure that pass.current doesnt exceed 10
                 if(passGameT < 10 ){
-                    newPAssgt = passGameT + 1
-                    setPassGameT(newPAssgt)    
+                    pass.current= pass.current + 1
+                    setPassGameT(pass.current)    
                 }
                 //if current pass is up to the required difficulty
-                if(passGameT == 10){
+                if(pass.current == 10){
                    showModal()
                 }
             }
+        }
     }
 
     const formatNumber= number => `0${number}`.slice(-2);
@@ -139,7 +164,7 @@ const Game = ({navigation,route}) => {
             </View>
             <View style={styles.gamecenter}>
             <Text style={styles.num}>{isActive ? number : ''}</Text>
-            <Tapbutton style={styles.button} onPress={count} disabled={pass.current == 10 ? true : false}/>
+            <Tapbutton style={styles.button} onPress={count} disabled={passGameT == 10 ? true : false}/>
             {isActive? <Text>''</Text> : 
             <TouchableOpacity style={styles.btnStart} onPress={toggle} disabled={isActive}>
                  <Text style={styles.btntext}>Start</Text>

@@ -3,6 +3,7 @@ import { Text, View,StyleSheet } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { GameProvider } from './src/contextApi';
 
 import Game from './src/screens/Game';
 import Result from './src/screens/Result';
@@ -17,12 +18,14 @@ const App = () => {
   }, [])
   return (
     <PaperProvider>
-    <NavigationContainer>
-      <Stack.Navigator>
-          <Stack.Screen name="Result" component={Result}  options={{ headerShown:false}}/>
-          <Stack.Screen name="Game" component={Game}  options={{ headerShown:false}}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+      <GameProvider>
+       <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Result" component={Result}  options={{ headerShown:false}}/>
+            <Stack.Screen name="Game" component={Game}  options={{ headerShown:false}}/>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </GameProvider>
     </PaperProvider>
   );
 }
