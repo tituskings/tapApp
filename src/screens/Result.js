@@ -21,8 +21,7 @@ const Result = ({route, navigation}) => {
     const [mod2, setMod2] = useState(false);
     const [checked,setChecked] = useState('easy');
     
-    const [stepNow, setStepNow] = useContext(GameContext)
-    const [level, setLevel] = useContext(GameContext)
+    const {stepNow, setStepNow,level, setLevel} = useContext(GameContext)
     
 
    console.log(stepNow)

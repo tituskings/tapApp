@@ -9,8 +9,7 @@ export const  GameProvider = props => {
     return (
         <GameContext.Provider 
         value={
-            [stepNow,setStepNow],
-            [level,setLevel]
+            {stepNow,setStepNow,level,setLevel}
         }>
             {props.children}
         </GameContext.Provider>

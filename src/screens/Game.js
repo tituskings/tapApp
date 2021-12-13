@@ -27,8 +27,8 @@ const Game = ({navigation,route}) => {
     const [Visible, setVisible] = useState(false);
     const [ndifficultyTask, setNdifficultyTask] = useState(0)
 
-    const [stepNow, setStepNow] = useContext(GameContext)
-    const [level, setLevel] = useContext(GameContext)
+    const {stepNow, setStepNow,level, setLevel} = useContext(GameContext)
+   
     
    //function that toogles the start button
    const toggle = ()=>{
@@ -45,14 +45,15 @@ const Game = ({navigation,route}) => {
     
     const modFunction = () => {
             //if pass a param from the game screen is equal to 10 then increase step by 1
-            if( pass.current  == 10){
+            if( pass.current  === 10){
                 nstep()
             } 
             
             // if step equals 10 then increase the level by 1
-            if( stepNow == 10){ 
+            if( stepNow === 10){ 
             nlevel()
             }
+            if(pass.current < 10)
         // control the visibility of the modal
         showModal()
         setTimeout(()=>{
@@ -129,6 +130,7 @@ const Game = ({navigation,route}) => {
                 //if current pass is up to the required difficulty
                 if(pass.current == 10){
                    showModal()
+                   modFunction()
                 }
             }
         }
